@@ -2,6 +2,7 @@ package com.fiuni.adoptamena.api.controller.post;
 
 import com.fiuni.adoptamena.api.dto.post.PostDTO;
 import com.fiuni.adoptamena.api.service.post.IPostService;
+import com.fiuni.adoptamena.auth.GenericResponse;
 import com.fiuni.adoptamena.exception_handler.exceptions.BadRequestException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,11 +78,7 @@ public class PostController {
     }
 
     @DeleteMapping({ "/{id}" })
-    public ResponseEntity<String> delete(@Valid @PathVariable(name = "id", required = true) Integer id, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult.getAllErrors());
-        }
+    public ResponseEntity<String> delete(@Valid @PathVariable(name = "id", required = true) Integer id) {
 
         this.postService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("post with id: " + id + "was deleted");
@@ -104,13 +101,9 @@ public class PostController {
     }
 
     @PutMapping("/{id}/increment-counter")
-    public ResponseEntity<String> incrementPostCounter(@PathVariable Integer id, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult.getAllErrors());
-        }
+    public ResponseEntity<Void> incrementPostCounter(@PathVariable Integer id) {
 
         postService.increaseSharedCounter(id);
-        return ResponseEntity.ok().body("Shared Counter of the post was increased.");
+        return ResponseEntity.ok().build();
     }
 }

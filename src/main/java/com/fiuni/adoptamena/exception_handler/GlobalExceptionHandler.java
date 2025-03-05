@@ -5,7 +5,7 @@ import com.fiuni.adoptamena.exception_handler.exceptions.ConflictException;
 import com.fiuni.adoptamena.exception_handler.exceptions.ForbiddenException;
 import com.fiuni.adoptamena.exception_handler.exceptions.GoneException;
 
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import com.fiuni.adoptamena.exception_handler.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

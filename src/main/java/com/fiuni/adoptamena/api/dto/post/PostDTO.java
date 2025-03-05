@@ -2,6 +2,7 @@ package com.fiuni.adoptamena.api.dto.post;
 
 import com.fiuni.adoptamena.api.dto.base.BaseDTO;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.Date;
 
 public class PostDTO extends BaseDTO {
 
-    @NotBlank(message = "El usuario debe ser Obligatorio.")
+    @NotNull
     private Integer idUser;
 
     @NotBlank(message = "El titulo es Obligatorio.")
@@ -27,7 +28,7 @@ public class PostDTO extends BaseDTO {
 
     private String content;
 
-    @NotBlank(message = "El tipo de post debe ser Obligatorio.")
+    @NotNull
     private Integer idPostType;
 
     private String locationCoordinates;

@@ -136,4 +136,10 @@ public class PetServiceImpl extends BaseServiceImpl<PetDomain, PetDTO> implement
         Page<PetDomain> domain = petDao.findAllByIsDeletedFalse(pageable);
         return convertDomainListToDtoList(domain.getContent());
     }
+
+    @Override
+    public List<PetDTO> getPetByUserId(Integer userId) {
+        List<PetDomain> domain = petDao.findByUserIdAndIsDeletedFalse(userId);
+        return convertDomainListToDtoList(domain);
+    }
 }

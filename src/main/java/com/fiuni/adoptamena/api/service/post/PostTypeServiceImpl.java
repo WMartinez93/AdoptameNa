@@ -86,22 +86,9 @@ public class PostTypeServiceImpl extends BaseServiceImpl<PostTypeDomain, PostTyp
 
     @Override
     public PostTypeDTO getById(Integer id) {
-        log.info("Get PostType by id");
-        PostTypeDTO postTypeDto = null;
-        try {
-            Optional<PostTypeDomain> postTypeDomainOptional = postTypeDao.findById(id);
-            if (postTypeDomainOptional.isPresent() && postTypeDomainOptional.get().getIsDeleted()) {
-                PostTypeDomain postTypeDomain = postTypeDomainOptional.get();
-
-                postTypeDto = convertDomainToDto(postTypeDomain);
-                log.info("PostType get successful");
-            }
-        } catch (Exception e) {
-            log.info("PostType get failed");
-            throw new ResourceNotFoundException("Error while getting postType");
-            // new ErrorResponse("Error getting a post Type", e.getMessage());
-        }
-        return postTypeDto;
+        PostTypeDomain postType = postTypeDao.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new ResourceNotFoundException("PostType no encontrado"));
+        return convertDomainToDto(postType);
     }
 
     @Override

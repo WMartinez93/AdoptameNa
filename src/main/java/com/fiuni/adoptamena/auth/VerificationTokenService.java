@@ -8,7 +8,7 @@ import com.fiuni.adoptamena.exception_handler.exceptions.BadRequestException;
 import com.fiuni.adoptamena.exception_handler.exceptions.GoneException;
 import com.fiuni.adoptamena.utils.EmailService;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class VerificationTokenService {
     @Autowired
     private final EmailService emailService;
 
-    private static final String BASE_VERIFICATION_LINK = "http://localhost:8080/auth/verify-email?token=";
+    private static final String BASE_VERIFICATION_LINK = "http://localhost:3000/verify-email?token=";
 
     /**
      * Crea un nuevo token de verificación para un usuario y lo guarda en la base de
@@ -82,14 +82,13 @@ public class VerificationTokenService {
         VerificationTokenDomain verificationToken = getVerificationToken(token);
 
         if (verificationToken.getExpiryDate().before(new Date())) {
-            deleteToken(verificationToken.getUser());
+            deleteToken(verificationToken.getUser()); // 🔴 Elimina el token aquí puede causar problemas
             throw new GoneException("El token de verificación ha expirado. Solicita uno nuevo.");
         }
 
         UserDomain user = verificationToken.getUser();
         user.setIsVerified(true);
-
-        deleteToken(user);
+        userDao.save(user); // 🔹 Guarda primero el usuario
 
         return GenericResponse.builder()
                 .message("Usuario verificado correctamente.")

@@ -6,9 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface IPostTypeDao extends CrudRepository<PostTypeDomain, Integer> {
     Page<PostTypeDomain> findAllByIsDeletedFalse(Pageable pageable);
 
     Page<PostTypeDomain> findByNameContainingAndDescriptionContainingAndIsDeletedFalse(String name, String description, Pageable pageable);
+
+    Optional<PostTypeDomain> findByIdAndIsDeletedFalse(Integer id);
 }
