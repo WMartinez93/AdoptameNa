@@ -143,4 +143,12 @@ public class AuthService {
                 .build();
     }
 
+    public void setPassword(String email, String password) {
+        UserDomain user = userDao.findByEmailAndIsDeletedFalse(email)
+                .orElseThrow(() -> new BadRequestException("Usuario no encontrado"));
+
+        user.setPassword(passwordEncoder.encode(password));
+        userDao.save(user);
+    }
+
 }

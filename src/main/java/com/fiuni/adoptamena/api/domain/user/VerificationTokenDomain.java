@@ -21,7 +21,7 @@ public class VerificationTokenDomain {
     private String token;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "id_user", nullable = false)
     private UserDomain user;
 
     @Column(nullable = false)
@@ -31,5 +31,9 @@ public class VerificationTokenDomain {
         this.user = user;
         this.token = UUID.randomUUID().toString();
         this.expiryDate = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24); // Expira en 24 horas
+    }
+
+    public Boolean isExpired() {
+        return new Date().after(expiryDate);
     }
 }

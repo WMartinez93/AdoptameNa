@@ -35,7 +35,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserDomain, UserDTO> implem
         userDTO.setEmail(domain.getEmail());
         userDTO.setRole(domain.getRole().getName());
         userDTO.setCreationDate(domain.getCreationDate());
-        userDTO.getIsVerified();
+        userDTO.setIsVerified(domain.getIsVerified());
         return userDTO;
     }
 
@@ -88,6 +88,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserDomain, UserDTO> implem
         UserDomain user = userDao.findByIdAndIsDeletedFalse(dto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
+        user.setUsername(dto.getEmail());
         user.setEmail(dto.getEmail());
 
         RoleDomain role = roleDao.findByName(dto.getRole())
