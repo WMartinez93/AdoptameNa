@@ -222,12 +222,12 @@ public class PostReportServiceImpl extends BaseServiceImpl<PostReportDomain, Pos
     @Override
     public List<PostReportDto> getAllPostsReports(Pageable pageable, Integer userId, Integer postId, Integer reportReasonsId, String description) {
         log.info("Getting all Posts Reports");
-/*
-        if (userId == null || postId == null || reportReasonsId == null || description == null) {
+
+        if (userId != null || postId != null || reportReasonsId != null || description != null) {
             Page<PostReportDomain> postReportPage = postReportDao.findByFiltersAndIsDeletedFalse(pageable, userId, postId, reportReasonsId, description);
             return convertDomainListToDtoList(postReportPage.getContent());
         }
-*/
+
         Page<PostReportDomain> postReportPage = postReportDao.findAllByIsDeletedFalse(pageable);
         return convertDomainListToDtoList(postReportPage.getContent());
     }

@@ -49,11 +49,8 @@ public class PostReportsController {
     }
 
     @DeleteMapping({ "/{id}" })
-    public ResponseEntity<String> delete(@Valid @PathVariable(name = "id", required = true) Integer id, BindingResult bindingResult) {
+    public ResponseEntity<String> delete(@Valid @PathVariable(name = "id", required = true) Integer id) {
 
-        if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult.getAllErrors());
-        }
         this.postReportService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Post Report with id: " + id + "was deleted");
     }
