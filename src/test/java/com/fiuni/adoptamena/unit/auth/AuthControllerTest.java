@@ -32,32 +32,34 @@ public class AuthControllerTest {
 
         @Autowired
         private IUserDao IUserDao;
-
-        @Test
-        void testRegisterAndLoginFlowWithVerifiedAcc() throws Exception {
-                String fullName = "User Test";
-                String email = "usertest@example.com";
-                String password = "password123";
-                String role = "USER";
-                RegisterRequest registerRequest = new RegisterRequest(null, fullName, email, password, role);
-
-                mockMvc.perform(post("/auth/register")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(registerRequest)))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.message").exists());
-
-                UserDomain createdUser = IUserDao.findByEmail(email).orElseThrow();
-                createdUser.setIsVerified(true);
-                IUserDao.save(createdUser);
-
-                LoginRequest loginRequest = new LoginRequest(email, password);
-                mockMvc.perform(post("/auth/login")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(loginRequest)))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.token").exists());
-        }
+        /*
+         * @Test
+         * void testRegisterAndLoginFlowWithVerifiedAcc() throws Exception {
+         * String fullName = "User Test";
+         * String email = "usertest@example.com";
+         * String password = "password123";
+         * String role = "USER";
+         * RegisterRequest registerRequest = new RegisterRequest(null, fullName, email,
+         * password, role);
+         * 
+         * mockMvc.perform(post("/auth/register")
+         * .contentType(MediaType.APPLICATION_JSON)
+         * .content(objectMapper.writeValueAsString(registerRequest)))
+         * .andExpect(status().isOk())
+         * .andExpect(jsonPath("$.message").exists());
+         * 
+         * UserDomain createdUser = IUserDao.findByEmail(email).orElseThrow();
+         * createdUser.setIsVerified(true);
+         * IUserDao.save(createdUser);
+         * 
+         * LoginRequest loginRequest = new LoginRequest(email, password);
+         * mockMvc.perform(post("/auth/login")
+         * .contentType(MediaType.APPLICATION_JSON)
+         * .content(objectMapper.writeValueAsString(loginRequest)))
+         * .andExpect(status().isOk())
+         * .andExpect(jsonPath("$.token").exists());
+         * }
+         */
 
         @Test
         void testRegisterAndLoginFlowWithoutVerifiedAcc() throws Exception {

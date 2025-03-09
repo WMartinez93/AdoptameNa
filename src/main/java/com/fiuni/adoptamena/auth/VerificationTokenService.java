@@ -30,7 +30,7 @@ public class VerificationTokenService {
     @Autowired
     private final EmailService emailService;
 
-    private static final String BASE_VERIFICATION_LINK = "http://localhost:3000/verify-email?token=";
+    private static final String BASE_VERIFICATION_LINK = "https://test--relaxed-bienenstitch-1d8d39.netlify.app/verify-email?token=";
 
     /**
      * Crea un nuevo token de verificación para un usuario y lo guarda en la base de

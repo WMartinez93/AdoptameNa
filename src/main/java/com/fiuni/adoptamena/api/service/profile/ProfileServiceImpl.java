@@ -5,6 +5,7 @@ import com.fiuni.adoptamena.api.dao.user.IUserDao;
 import com.fiuni.adoptamena.api.domain.profile.*;
 import com.fiuni.adoptamena.api.domain.user.UserDomain;
 import com.fiuni.adoptamena.api.dto.profile.ProfileDTO;
+import com.fiuni.adoptamena.api.dto.user.UserProfileDTO;
 import com.fiuni.adoptamena.api.service.base.BaseServiceImpl;
 import com.fiuni.adoptamena.exception_handler.exceptions.*;
 import jakarta.transaction.Transactional;
@@ -62,6 +63,7 @@ public class ProfileServiceImpl extends BaseServiceImpl<ProfileDomain, ProfileDT
 
     @Override
     public ProfileDTO getById(Integer userId) {
+
         UserDomain user = userDao.findByIdAndIsDeletedFalse(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         return convertDomainToDto(user.getProfile());
@@ -152,6 +154,23 @@ public class ProfileServiceImpl extends BaseServiceImpl<ProfileDomain, ProfileDT
         } catch (IllegalArgumentException e) {
             throw new BadRequestException(gender + " no es un género válido");
         }
+    }
+
+    @Override
+    public UserProfileDTO getUserProfileDTO(Integer id) {
+        UserProfileDTO dto = new UserProfileDTO();
+        ProfileDomain profile = userDao.findByIdAndIsDeletedFalse(id).orElseThrow(
+                () -> new ResourceNotFoundException("Usuario con ID " + id + " no encontrado")).getProfile();
+        UserDomain user = userDao.findByIdAndIsDeletedFalse(id).orElseThrow(
+                () -> new ResourceNotFoundException("Usuario con ID " + id + " no encontrado"));
+
+        dto.setId(profile.getId());
+        dto.setFullName(profile.getFullName());
+        dto.setEmail(user.getEmail());
+        dto.setCreationDate(user.getCreationDate());
+        dto.setRole(user.getRole().getName());
+        dto.setIsVerified(user.getIsVerified());
+        return dto;
     }
 
 }

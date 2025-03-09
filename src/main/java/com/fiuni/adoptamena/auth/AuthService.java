@@ -5,6 +5,7 @@ import com.fiuni.adoptamena.api.dao.user.IUserDao;
 import com.fiuni.adoptamena.api.domain.user.UserDomain;
 import com.fiuni.adoptamena.api.dto.profile.ProfileDTO;
 import com.fiuni.adoptamena.api.service.profile.IProfileService;
+import com.fiuni.adoptamena.api.service.user.IUserService;
 import com.fiuni.adoptamena.exception_handler.exceptions.BadRequestException;
 import com.fiuni.adoptamena.exception_handler.exceptions.ConflictException;
 import com.fiuni.adoptamena.exception_handler.exceptions.ForbiddenException;
@@ -49,6 +50,9 @@ public class AuthService {
     private IProfileService profileService;
 
     @Autowired
+    private IUserService userService;
+
+    @Autowired
     private VerificationTokenService verificationTokenService;
 
     private static final Set<String> VALID_ROLES = Set.of("USER", "ORGANIZATION");
@@ -76,6 +80,7 @@ public class AuthService {
         // Generar y devolver el token de autenticación
         return AuthResponse.builder()
                 .token(jwtService.getToken(user))
+                .user(userService.getUserProfileDTO(user.getId()))
                 .build();
     }
 
