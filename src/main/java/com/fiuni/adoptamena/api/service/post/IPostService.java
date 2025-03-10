@@ -2,6 +2,7 @@ package com.fiuni.adoptamena.api.service.post;
 
 import com.fiuni.adoptamena.api.domain.post.PostDomain;
 import com.fiuni.adoptamena.api.dto.post.PostDTO;
+import com.fiuni.adoptamena.api.dto.post.ResponsePostDTO;
 import com.fiuni.adoptamena.api.service.base.IBaseService;
 import org.springframework.data.domain.Pageable;
 
@@ -11,10 +12,16 @@ public interface IPostService extends IBaseService<PostDomain, PostDTO> {
 
 
 
-    List<PostDTO> getAllPosts(Pageable pageable, String title, String content, Integer userId, Integer postTypeId);
+    List<PostDTO> getAllPosts(Pageable pageable, String title, String content, Integer userId, String postTypeName);
 
     List<PostDTO> searchPostByKeyword(Pageable pageable, String keyword);
 
     void increaseSharedCounter(Integer postId);
+
+    ResponsePostDTO domainToPostResponse(PostDomain postDomain);
+
+    ResponsePostDTO getResponsePostById(Integer postId);
+
+    List<ResponsePostDTO> getAllResponsePosts(Pageable pageable, String title, String content, Integer userId, String postTypeName);
 
 }
