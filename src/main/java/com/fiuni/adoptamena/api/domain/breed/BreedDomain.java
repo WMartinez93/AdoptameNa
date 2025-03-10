@@ -18,7 +18,7 @@ public class BreedDomain implements BaseDomain {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_race", nullable = false, unique = true)
+    @Column(name = "id_breed", nullable = false, unique = true)
     private Integer id;
 
     @Column(name = "str_name", length = 100)

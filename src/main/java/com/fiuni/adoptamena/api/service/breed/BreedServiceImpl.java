@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.fiuni.adoptamena.api.service.base.BaseServiceImpl;
 import com.fiuni.adoptamena.api.dao.animal.IAnimalDao;
-import com.fiuni.adoptamena.api.dao.race.*;
+import com.fiuni.adoptamena.api.dao.breed.*;
 import com.fiuni.adoptamena.api.domain.breed.*;
 import com.fiuni.adoptamena.api.dto.breed.*;
 import com.fiuni.adoptamena.exception_handler.exceptions.*;
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BreedServiceImpl extends BaseServiceImpl<BreedDomain, BreedDTO> implements IBreedService {
 
     @Autowired
-    private IRaceDao raceDao;
+    private IBreedDao breedDao;
 
     @Autowired
     private IAnimalDao animalDao;
@@ -54,26 +54,26 @@ public class BreedServiceImpl extends BaseServiceImpl<BreedDomain, BreedDTO> imp
         log.info("pasa verificacion de animal");
         domain.setName(dto.getName());
         domain.setIsDeleted(false);
-        domain = raceDao.save(domain);
+        domain = breedDao.save(domain);
         return convertDomainToDto(domain);
     }
 
     @Override
     @Transactional
     public BreedDTO update(BreedDTO dto) {
-        BreedDomain domain = raceDao.findByIdAndIsDeletedFalse(dto.getId())
+        BreedDomain domain = breedDao.findByIdAndIsDeletedFalse(dto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Raza no encontrada"));
         domain.setAnimal(animalDao.findByIdAndIsDeletedFalse(dto.getAnimalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Animal no encontrado")));
         
                 domain.setName(dto.getName());
-        domain = raceDao.save(domain);
+        domain = breedDao.save(domain);
         return convertDomainToDto(domain);
     }
 
     @Override
     public BreedDTO getById(Integer id) {
-        BreedDomain domain = raceDao.findByIdAndIsDeletedFalse(id)
+        BreedDomain domain = breedDao.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Raza no encontrada"));
         return convertDomainToDto(domain);
     }
@@ -81,16 +81,16 @@ public class BreedServiceImpl extends BaseServiceImpl<BreedDomain, BreedDTO> imp
     @Override
     @Transactional
     public void delete(Integer id) {
-        BreedDomain domain = raceDao.findByIdAndIsDeletedFalse(id)
+        BreedDomain domain = breedDao.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Raza no encontrada"));
         domain.setIsDeleted(true);
-        raceDao.save(domain);
+        breedDao.save(domain);
         return;
     }
 
     @Override
     public List<BreedDTO> getAll(Pageable pageable) {
-        Page<BreedDomain> domain = raceDao.findAllByIsDeletedFalse(pageable);
+        Page<BreedDomain> domain = breedDao.findAllByIsDeletedFalse(pageable);
         return convertDomainListToDtoList(domain.getContent());
     }
 
