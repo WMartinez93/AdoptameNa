@@ -70,7 +70,7 @@ public class PostReportsController {
             @RequestParam(value = "user", required = false) Integer userId, //filtro por usuario
             @RequestParam(value = "post", required = false) Integer postId, //filtro por Post
             @RequestParam(value = "reportReason", required = false) Integer reportReasonsId, //filtro por razones de reportes
-            @RequestParam(value = "description") String description //filtro por descripcion
+            @RequestParam(value = "description", required = false) String description //filtro por descripcion
     ) {
 
         String[] sortParams = sort.split(",");
