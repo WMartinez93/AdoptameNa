@@ -7,6 +7,7 @@ import com.fiuni.adoptamena.api.domain.post.PostDomain;
 import com.fiuni.adoptamena.api.domain.post.PostTypeDomain;
 import com.fiuni.adoptamena.api.domain.user.UserDomain;
 import com.fiuni.adoptamena.api.dto.post.PostDTO;
+import com.fiuni.adoptamena.api.dto.post.ResponsePostDTO;
 import com.fiuni.adoptamena.api.service.base.BaseServiceImpl;
 import com.fiuni.adoptamena.exception_handler.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -115,6 +117,27 @@ public class PostServiceImpl extends BaseServiceImpl<PostDomain, PostDTO> implem
     }
 
     @Override
+    public ResponsePostDTO getResponsePostById(Integer postId) {
+        log.info("Getting Responsepost by id");
+        ResponsePostDTO responsePostDTO = null;
+        try {
+            Optional<PostDomain> postDomainOptional = postDao.findById(postId);
+            if (postDomainOptional.isPresent() && !postDomainOptional.get().getIsDeleted()) {
+                PostDomain postDomain = postDomainOptional.get();
+                responsePostDTO = domainToPostResponse(postDomain);
+                log.info("ResponsePost get successful");
+            }
+        } catch (Exception e) {
+            log.info("post get failed");
+            throw new ResourceNotFoundException("Post could not be found");
+            // new ErrorResponse("Error getting post", e.getMessage());
+        }
+        return responsePostDTO;
+    }
+
+
+
+    @Override
     public List<PostDTO> getAll(Pageable pageable) {
         return null;
     }
@@ -132,6 +155,26 @@ public class PostServiceImpl extends BaseServiceImpl<PostDomain, PostDTO> implem
 
         Page<PostDomain> postPage = postDao.findAllByIsDeletedFalse(pageable);
         return convertDomainListToDtoList(postPage.getContent());
+    }
+
+    @Override
+    public List<ResponsePostDTO> getAllResponsePosts(Pageable pageable, String title, String content, Integer userId, String postTypeName) {
+        log.info("Getting all posts");
+
+        if (title != null || content != null || userId != null || postTypeName != null) {
+            Page<PostDomain> postPage = postDao.findByFiltersAAndIsDeletedFalse(pageable, title, content, userId,
+                    postTypeName);
+            return convertDomainListToDtoListResponse(postPage.getContent());
+        }
+
+        Page<PostDomain> postPage = postDao.findAllByIsDeletedFalse(pageable);
+        return convertDomainListToDtoListResponse(postPage.getContent());
+    }
+
+    private List<ResponsePostDTO> convertDomainListToDtoListResponse(List<PostDomain> domainList) {
+        return domainList.stream()
+                .map(this::domainToPostResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -153,6 +196,39 @@ public class PostServiceImpl extends BaseServiceImpl<PostDomain, PostDTO> implem
         postDomain.setSharedCounter(postDomain.getSharedCounter() + 1);
 
         postDao.save(postDomain);
+    }
+
+    @Override
+    public ResponsePostDTO domainToPostResponse(PostDomain postDomain) {
+        log.info("Converting PostDomain to PostDto");
+
+        ResponsePostDTO responsePostDto = null;
+        try {
+            responsePostDto = new ResponsePostDTO();
+            responsePostDto.setId(postDomain.getId());
+            responsePostDto.setTitle(postDomain.getTitle());
+            responsePostDto.setContent(postDomain.getContent());
+            responsePostDto.setPublicationDate(postDomain.getPublicationDate());
+            responsePostDto.setContactNumber(postDomain.getContactNumber());
+            responsePostDto.setLocationCoordinates(postDomain.getLocationCoordinates());
+            responsePostDto.setSharedCounter(postDomain.getSharedCounter());
+            responsePostDto.setStatus(postDomain.getStatus());
+            responsePostDto.setPostTypeName(postDomain.getPostType().getName());
+
+
+            if (postDomain.getUser() != null && postDomain.getUser().getId() != null) {
+                responsePostDto.setIdUser(postDomain.getUser().getId());
+            } else {
+                log.info("User not found");
+                throw new ResourceNotFoundException("User not found");
+            }
+
+        } catch (Exception e) {
+            log.info("Error converting PostDomain to PostDTO", e);
+            throw new ResourceNotFoundException("Error converting PostDomain to PostDTO");
+            // new ErrorResponse("Error converting PostDomain to PostDTO", e.getMessage());
+        }
+        return responsePostDto;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.fiuni.adoptamena.api.controller.post;
 
 import com.fiuni.adoptamena.api.dto.post.PostDTO;
+import com.fiuni.adoptamena.api.dto.post.ResponsePostDTO;
 import com.fiuni.adoptamena.api.service.post.IPostService;
 import com.fiuni.adoptamena.auth.GenericResponse;
 import com.fiuni.adoptamena.exception_handler.exceptions.BadRequestException;
@@ -27,14 +28,14 @@ public class PostController {
     private IPostService postService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDTO> getPostById(@PathVariable(name = "id") int id) {
+    public ResponseEntity<ResponsePostDTO> getPostById(@PathVariable(name = "id") int id) {
 
-        PostDTO data = this.postService.getById(id);
+        ResponsePostDTO data = this.postService.getResponsePostById(id);
         return ResponseEntity.status(HttpStatus.OK).body(data);
     }
 
     @GetMapping({ "", "/" })
-    public ResponseEntity<List<PostDTO>> getAllPosts(
+    public ResponseEntity<List<ResponsePostDTO>> getAllPosts(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sort", defaultValue = "id,asc") String sort,
@@ -48,7 +49,7 @@ public class PostController {
         String[] sortParams = sort.split(",");
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortParams[0])));
 
-        List<PostDTO> postsPage = postService.getAllPosts(pageable, title, content, userId, postTypeName);
+        List<ResponsePostDTO> postsPage = postService.getAllResponsePosts(pageable, title, content, userId, postTypeName);
 
         return ResponseEntity.ok(postsPage);
     }
