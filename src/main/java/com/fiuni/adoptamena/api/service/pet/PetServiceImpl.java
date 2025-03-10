@@ -12,9 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.fiuni.adoptamena.api.dao.animal.IAnimalDao;
+import com.fiuni.adoptamena.api.dao.breed.*;
 import com.fiuni.adoptamena.api.dao.user.*;
-import com.fiuni.adoptamena.api.dao.race.*;
-import com.fiuni.adoptamena.api.dao.health_state.*;
 import com.fiuni.adoptamena.api.dao.pet_status.*;
 import java.util.List;
 
@@ -31,10 +30,7 @@ public class PetServiceImpl extends BaseServiceImpl<PetDomain, PetDTO> implement
     private IAnimalDao animalDao;
 
     @Autowired
-    private IRaceDao raceDao;
-
-    @Autowired
-    private IHealthStateDao healthStateDao;
+    private IBreedDao breedDao;
 
     @Autowired
     private IPetStatusDao petStatusDao;
@@ -67,8 +63,7 @@ public class PetServiceImpl extends BaseServiceImpl<PetDomain, PetDTO> implement
 
         dto.setUserId(domain.getUser().getId());
         dto.setAnimalId(domain.getAnimal().getId());
-        dto.setBreedId(domain.getRace().getId());
-        dto.setHealthStateId(domain.getHealthState().getId());
+        dto.setBreedId(domain.getBreed().getId());
         dto.setPetStatusId(domain.getPetStatus().getId());
 
         return dto;
@@ -86,11 +81,8 @@ public class PetServiceImpl extends BaseServiceImpl<PetDomain, PetDTO> implement
         petDomain.setAnimal(animalDao.findByIdAndIsDeletedFalse(dto.getAnimalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Animal no encontrado")));
 
-        petDomain.setRace(raceDao.findByIdAndIsDeletedFalse(dto.getBreedId())
+        petDomain.setBreed(breedDao.findByIdAndIsDeletedFalse(dto.getBreedId())
                 .orElseThrow(() -> new ResourceNotFoundException("Raza no encontrada")));
-
-        petDomain.setHealthState(healthStateDao.findByIdAndIsDeletedFalse(dto.getHealthStateId())
-                .orElseThrow(() -> new ResourceNotFoundException("Estado de salud no encontrado")));
                 
         petDomain.setPetStatus(petStatusDao.findByIdAndIsDeletedFalse(dto.getPetStatusId())
                 .orElseThrow(() -> new ResourceNotFoundException("Estado de mascota no encontrado")));
