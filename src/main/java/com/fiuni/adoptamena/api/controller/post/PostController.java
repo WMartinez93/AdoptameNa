@@ -41,14 +41,14 @@ public class PostController {
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "content", required = false) String content,
             @RequestParam(value = "user", required = false) Integer userId, // Filtro por usuario
-            @RequestParam(value = "postType", required = false) Integer postTypeId // Filtro por tipo de post
+            @RequestParam(value = "postType", required = false) String postTypeName // Filtro por tipo de post
 
     ) {
 
         String[] sortParams = sort.split(",");
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortParams[0])));
 
-        List<PostDTO> postsPage = postService.getAllPosts(pageable, title, content, userId, postTypeId);
+        List<PostDTO> postsPage = postService.getAllPosts(pageable, title, content, userId, postTypeName);
 
         return ResponseEntity.ok(postsPage);
     }

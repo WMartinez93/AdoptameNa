@@ -121,12 +121,12 @@ public class PostServiceImpl extends BaseServiceImpl<PostDomain, PostDTO> implem
 
     @Override
     public List<PostDTO> getAllPosts(Pageable pageable, String title, String content, Integer userId,
-            Integer postTypeId) {
+            String postTypeName) {
         log.info("Getting all posts");
 
-        if (title != null || content != null || userId != null || postTypeId != null) {
+        if (title != null || content != null || userId != null || postTypeName != null) {
             Page<PostDomain> postPage = postDao.findByFiltersAAndIsDeletedFalse(pageable, title, content, userId,
-                    postTypeId);
+                    postTypeName);
             return convertDomainListToDtoList(postPage.getContent());
         }
 

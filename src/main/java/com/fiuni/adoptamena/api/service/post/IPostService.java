@@ -11,7 +11,7 @@ public interface IPostService extends IBaseService<PostDomain, PostDTO> {
 
 
 
-    List<PostDTO> getAllPosts(Pageable pageable, String title, String content, Integer userId, Integer postTypeId);
+    List<PostDTO> getAllPosts(Pageable pageable, String title, String content, Integer userId, String postTypeName);
 
     List<PostDTO> searchPostByKeyword(Pageable pageable, String keyword);
 
