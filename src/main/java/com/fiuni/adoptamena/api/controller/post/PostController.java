@@ -3,7 +3,6 @@ package com.fiuni.adoptamena.api.controller.post;
 import com.fiuni.adoptamena.api.dto.post.PostDTO;
 import com.fiuni.adoptamena.api.dto.post.ResponsePostDTO;
 import com.fiuni.adoptamena.api.service.post.IPostService;
-import com.fiuni.adoptamena.auth.GenericResponse;
 import com.fiuni.adoptamena.exception_handler.exceptions.BadRequestException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
