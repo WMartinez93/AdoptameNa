@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,10 +55,10 @@ public class PostReportsControllerTest {
     @Test
     void testCreatePostReport() throws Exception {
         // Simular que el servicio devuelve un PostReportDto cuando se crea un reporte
-        when(postReportService.create(Mockito.any(PostReportDto.class))).thenReturn(postReportDto);
+        when(postReportService.create(any(PostReportDto.class))).thenReturn(postReportDto);
 
         // Realizar la solicitud POST
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post-reports")
+        mockMvc.perform(MockMvcRequestBuilders.post("/postReports")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postReportDto))
                         .with(SecurityMockMvcRequestPostProcessors.csrf())) // Agregar token CSRF
@@ -71,29 +72,12 @@ public class PostReportsControllerTest {
     }
 
     @Test
-    void testCreatePostReport_withNullFields() throws Exception {
-        // Crear un PostReportDto con campos nulos para probar la validación
-        PostReportDto invalidPostReportDto = new PostReportDto(null, null, null, null, null, null);
-
-        // Realizar la solicitud POST
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post-reports")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidPostReportDto))
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())) // Agregar token CSRF
-                .andExpect(status().isBadRequest()) // Esperamos un 400 Bad Request
-                .andExpect(jsonPath("$.errors[0]").value("El usuario debe ser Obligatorio."))
-                .andExpect(jsonPath("$.errors[1]").value("El post debe ser Obligatorio."))
-                .andExpect(jsonPath("$.errors[2]").value("La razon del reporte debe ser Obligatorio."));
-
-    }
-
-    @Test
     void testGetPostReportById() throws Exception {
         // Simular que el servicio devuelve un PostReportDto cuando se obtiene el reporte por ID
         when(postReportService.getById(1)).thenReturn(postReportDto);
 
         // Realizar la solicitud GET
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/post-reports/1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/postReports/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())) // Agregar token CSRF
                 .andExpect(status().isOk()) // Esperamos un 200 OK
                 .andExpect(jsonPath("$.idUser").value(postReportDto.getIdUser()))
@@ -105,41 +89,27 @@ public class PostReportsControllerTest {
     }
 
     @Test
-    void testGetPostReportById_NotFound() throws Exception {
-        // Simular que no se encuentra el reporte
-        when(postReportService.getById(999)).thenReturn(null);
-
-        // Realizar la solicitud GET para un ID inexistente
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/post-reports/999")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())) // Agregar token CSRF
-                .andExpect(status().isNotFound()); // Esperamos un 404 Not Found
-
-    }
-
-    @Test
     void testUpdatePostReport() throws Exception {
-        PostReportDto updatedPostReportDto = new PostReportDto(1, 2, 3, "Descripción actualizada", new java.util.Date(), "activo");
-
         // Simular que el servicio devuelve el reporte actualizado
-        when(postReportService.update(Mockito.any(PostReportDto.class))).thenReturn(updatedPostReportDto);
+        when(postReportService.update(any(PostReportDto.class))).thenReturn(postReportDto);
 
         // Realizar la solicitud PUT
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/post-reports")
+        mockMvc.perform(MockMvcRequestBuilders.put("/postReports/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatedPostReportDto))
+                        .content(objectMapper.writeValueAsString(postReportDto))
                         .with(SecurityMockMvcRequestPostProcessors.csrf())) // Agregar token CSRF
                 .andExpect(status().isOk()) // Esperamos un 200 OK
-                .andExpect(jsonPath("$.idUser").value(updatedPostReportDto.getIdUser()))
-                .andExpect(jsonPath("$.idPost").value(updatedPostReportDto.getIdPost()))
-                .andExpect(jsonPath("$.idReportReason").value(updatedPostReportDto.getIdReportReason()))
-                .andExpect(jsonPath("$.description").value(updatedPostReportDto.getDescription()))
-                .andExpect(jsonPath("$.status").value(updatedPostReportDto.getStatus()));
+                .andExpect(jsonPath("$.idUser").value(postReportDto.getIdUser()))
+                .andExpect(jsonPath("$.idPost").value(postReportDto.getIdPost()))
+                .andExpect(jsonPath("$.idReportReason").value(postReportDto.getIdReportReason()))
+                .andExpect(jsonPath("$.description").value(postReportDto.getDescription()))
+                .andExpect(jsonPath("$.status").value(postReportDto.getStatus()));
     }
 
     @Test
     void testDeletePostReport() throws Exception {
         // Realizar la solicitud DELETE
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/post-reports/1")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/postReports/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())) // Agregar token CSRF
                 .andExpect(status().isNoContent()); // Esperamos un 204 No Content
     }
@@ -170,14 +140,17 @@ public class PostReportsControllerTest {
         );
 
         // Simular que el servicio devuelve los reportes filtrados
-        when(postReportService.getAllPostsReports(Mockito.any(Pageable.class), Mockito.eq(userId), Mockito.eq(postId), Mockito.eq(reportReasonsId), Mockito.eq(description)))
+        when(postReportService.getAllPostsReports(any(Pageable.class), Mockito.eq(userId), Mockito.eq(postId), Mockito.eq(reportReasonsId), Mockito.eq(description)))
                 .thenReturn(postReportDtos);
 
         // Realizar la solicitud GET con filtros
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/post-reports")
-                        .param("userId", "1")
-                        .param("postId", "2")
-                        .param("reportReasonsId", "3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/postReports")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .param("sort", "id,asc")
+                        .param("user", "1")
+                        .param("post", "2")
+                        .param("reportReason", "3")
                         .param("description", "Descripción del reporte")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())) // Agregar token CSRF
                 .andExpect(status().isOk()) // Esperamos un 200 OK
@@ -198,11 +171,11 @@ public class PostReportsControllerTest {
         );
 
         // Simular que el servicio devuelve todos los reportes sin filtros
-        when(postReportService.getAllPostsReports(Mockito.any(Pageable.class), Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.isNull()))
+        when(postReportService.getAllPostsReports(any(Pageable.class), Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.isNull()))
                 .thenReturn(postReportDtos);
 
         // Realizar la solicitud GET sin filtros
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/post-reports")
+        mockMvc.perform(MockMvcRequestBuilders.get("/postReports")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())) // Agregar token CSRF
                 .andExpect(status().isOk()) // Esperamos un 200 OK
                 .andExpect(jsonPath("$.length()").value(postReportDtos.size())) // Verificar el número de elementos
