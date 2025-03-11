@@ -48,12 +48,8 @@ public class ReportReasonsController {
     }
 
     @DeleteMapping({ "/{id}" })
-    public ResponseEntity<String> delete(@Valid @PathVariable(name = "id", required = true) Integer id,
-            BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult.getAllErrors());
-        }
+    public ResponseEntity<String> delete(@Valid @PathVariable(name = "id", required = true) Integer id
+            ) {
 
         this.reportReasonsService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Report Reason with id: " + id + "was deleted");

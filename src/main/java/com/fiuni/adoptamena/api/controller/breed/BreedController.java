@@ -17,49 +17,49 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @RestController
-@RequestMapping("/race")
+@RequestMapping("/breed")
 @Slf4j
-@Tag(name = "Race")
+@Tag(name = "Breed")
 public class BreedController {
 
     @Autowired
-    private IBreedService raceService;
+    private IBreedService breedService;
 
     @GetMapping("/{id}")
     public ResponseEntity<BreedDTO> get(@PathVariable Integer id) {
-        BreedDTO result = raceService.getById(id);
+        BreedDTO result = breedService.getById(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<BreedDTO> create(@Valid @RequestBody BreedDTO race, BindingResult bindingResult) {
+    public ResponseEntity<BreedDTO> create(@Valid @RequestBody BreedDTO breed, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BadRequestException(bindingResult.getAllErrors());
         }
-        BreedDTO result = raceService.create(race);
+        BreedDTO result = breedService.create(breed);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BreedDTO> update(@Valid @PathVariable Integer id, @RequestBody BreedDTO race,
+    public ResponseEntity<BreedDTO> update(@Valid @PathVariable Integer id, @RequestBody BreedDTO breed,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BadRequestException(bindingResult.getAllErrors());
         }
-        race.setId(id);
-        BreedDTO result = raceService.update(race);
+        breed.setId(id);
+        BreedDTO result = breedService.update(breed);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        raceService.delete(id);
+        breedService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<BreedDTO>> getAll(Pageable pageable) {
-        return new ResponseEntity<>(raceService.getAll(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(breedService.getAll(pageable), HttpStatus.OK);
     }
 }
  

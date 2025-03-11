@@ -69,10 +69,10 @@ public class ReportReasonsServiceImpl extends BaseServiceImpl<ReportReasonsDomai
         ReportReasonsDTO savedReportReasonDto = null;
         try {
             ReportReasonsDomain reportReasonsDomain = convertDtoToDomain(reportReasonsDto);
-            ReportReasonsDomain savedReportReason = reportReasonsDao.save(reportReasonsDomain);
+            ReportReasonsDomain savedReportReasonDomain = reportReasonsDao.save(reportReasonsDomain);
             log.info("Saved report reason successful");
 
-            savedReportReasonDto = convertDomainToDto(savedReportReason);
+            savedReportReasonDto = convertDomainToDto(savedReportReasonDomain);
         } catch (Exception e) {
             log.info("Error saving ReportReasonsDTO");
             throw new ResourceNotFoundException("Error creating a Report Reason");
@@ -89,7 +89,7 @@ public class ReportReasonsServiceImpl extends BaseServiceImpl<ReportReasonsDomai
 
             ReportReasonsDomain updatedReportReasonsDomain = convertDtoToDomain(reportReasonsDto);
 
-            if(reportReasonsDomain.getIsDeleted()){
+            if(!reportReasonsDomain.getIsDeleted()){
                 updatedReportReasonsDomain.setIsDeleted(false);
             }
 

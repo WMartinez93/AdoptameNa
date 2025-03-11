@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -55,6 +56,8 @@ public class SecurityConfig {
                                                         return corsConfig;
                                                 }))
                                 .authorizeRequests(authRequest -> authRequest
+                                                .requestMatchers(HttpMethod.GET).permitAll() // Permitir todos los get
+
                                                 .requestMatchers(
                                                                 "/auth/**", // Permitir endpoints de autenticación
                                                                 "/swagger-ui/**", // Permitir Swagger UI
@@ -63,7 +66,8 @@ public class SecurityConfig {
                                                                 "/v3/api-docs/swagger-config", // Configuración de
                                                                                                // Swagger
                                                                 "/webjars/**" // Recursos estáticos de Swagger
-                                                ).permitAll()
+                                                ).permitAll().requestMatchers("/admin/**").hasRole("ADMIN")
+
                                                 .anyRequest().authenticated())
                                 .exceptionHandling(exceptions -> exceptions
                                                 .authenticationEntryPoint(authenticationEntryPoint)
