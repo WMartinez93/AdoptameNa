@@ -79,6 +79,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             throw new BadRequestException(bindingResult.getAllErrors());
         }
+        profile.setId(id);
         ProfileDTO result = profileService.update(profile);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
