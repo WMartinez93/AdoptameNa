@@ -24,9 +24,6 @@ public class PasswordResetService {
     private final EmailService emailService;
     private final AuthService authService;
 
-    @Value("${app.url}")
-    private String API_URL;
-
     private static final String BASE_RESET_PASSWORD_LINK = "https://test--relaxed-bienenstitch-1d8d39.netlify.app/reset-password?token=";
 
     /**

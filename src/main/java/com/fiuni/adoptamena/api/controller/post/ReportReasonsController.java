@@ -3,6 +3,8 @@ package com.fiuni.adoptamena.api.controller.post;
 import com.fiuni.adoptamena.api.dto.post.ReportReasonsDTO;
 import com.fiuni.adoptamena.api.service.post.IReportReasonsService;
 import com.fiuni.adoptamena.exception_handler.exceptions.BadRequestException;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reportReasons")
+@Tag(name = "Report Reason")
 public class ReportReasonsController {
 
     @Autowired
@@ -48,8 +51,7 @@ public class ReportReasonsController {
     }
 
     @DeleteMapping({ "/{id}" })
-    public ResponseEntity<String> delete(@Valid @PathVariable(name = "id", required = true) Integer id
-            ) {
+    public ResponseEntity<String> delete(@Valid @PathVariable(name = "id", required = true) Integer id) {
 
         this.reportReasonsService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Report Reason with id: " + id + "was deleted");
@@ -57,7 +59,6 @@ public class ReportReasonsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReportReasonsDTO> getReportReasonById(@PathVariable(name = "id", required = true) int id) {
-
 
         ReportReasonsDTO data = this.reportReasonsService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(data);
@@ -68,9 +69,7 @@ public class ReportReasonsController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sort", defaultValue = "id,asc") String sort,
-            @RequestParam(value = "description", required = false) String description
-            ) {
-
+            @RequestParam(value = "description", required = false) String description) {
 
         String[] sortParams = sort.split(",");
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortParams[0])));
