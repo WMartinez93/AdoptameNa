@@ -9,9 +9,10 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
 import java.util.Date;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class PetDTO extends BaseDTO{
+public class PetDTO extends BaseDTO {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -38,8 +39,6 @@ public class PetDTO extends BaseDTO{
     private Integer animalId;
 
     private Integer breedId;
-
-    private Integer healthStateId;
 
     private Integer petStatusId;
 }
