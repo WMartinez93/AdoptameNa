@@ -45,7 +45,7 @@ public class FavoriteServiceImp extends BaseServiceImpl<FavoriteDomain, Favorite
 
     @Override
     public List<FavoriteDTO> getAll(Pageable pageable) {
-        return favoriteDao.findAllByIsDeletedFalse(pageable)
+        return favoriteDao.findAll(pageable)
                 .stream()
                 .map(this::convertDomainToDto)
                 .toList();
@@ -59,18 +59,15 @@ public class FavoriteServiceImp extends BaseServiceImpl<FavoriteDomain, Favorite
      */
     @Override
     public void delete(Integer id) {
-
-        FavoriteDomain domain = favoriteDao.findById(id).orElse(null);
-        if (domain == null) {
-            return;
-        }
+        FavoriteDomain domain = favoriteDao.findById(id)
+                .orElseThrow(() -> new BadRequestException("No se encontró el favorito"));
 
         if (!isCurrentUserOwner(domain)) {
             throw new BadRequestException("No puedes eliminar un favorito que no te pertenece");
         }
 
-        domain.setIsDeleted(true);
-        favoriteDao.save(domain);
+        favoriteDao.delete(domain);
+
     }
 
     @Override
@@ -78,7 +75,7 @@ public class FavoriteServiceImp extends BaseServiceImpl<FavoriteDomain, Favorite
         UserDomain currentUser = getCurrentUser();
 
         FavoriteDomain existingDomain = favoriteDao
-                .findByPostIdAndUserIdAndIsDeletedFalse(dto.getPostId(), currentUser.getId()).orElse(null);
+                .findByPostIdAndUserId(dto.getPostId(), currentUser.getId()).orElse(null);
         if (existingDomain != null) {
             throw new BadRequestException("El favorito ya existe");
         }
@@ -149,7 +146,7 @@ public class FavoriteServiceImp extends BaseServiceImpl<FavoriteDomain, Favorite
             return List.of();
         }
 
-        return favoriteDao.findAllByUserIdAndIsDeletedFalse(currentUser.getId(), pageable)
+        return favoriteDao.findAllByUserId(currentUser.getId(), pageable)
                 .stream()
                 .map(this::convertDomainToDto)
                 .toList();

@@ -9,12 +9,11 @@ import org.springframework.data.repository.CrudRepository;
 import com.fiuni.adoptamena.api.domain.favorite.FavoriteDomain;
 
 public interface IFavoriteDao extends CrudRepository<FavoriteDomain, Integer> {
-    Optional<FavoriteDomain> findByIdAndIsDeletedFalse(Integer id);
 
-    Page<FavoriteDomain> findAllByIsDeletedFalse(Pageable pageable);
+    Page<FavoriteDomain> findAll(Pageable pageable);
 
-    Optional<FavoriteDomain> findByPostIdAndUserIdAndIsDeletedFalse(Integer postId, Integer userId);
+    Optional<FavoriteDomain> findByPostIdAndUserId(Integer postId, Integer userId);
 
-    Page<FavoriteDomain> findAllByUserIdAndIsDeletedFalse(Integer userId, Pageable pageable);
+    Page<FavoriteDomain> findAllByUserId(Integer userId, Pageable pageable);
 
 }

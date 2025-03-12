@@ -28,7 +28,4 @@ public class FavoriteDomain implements BaseDomain {
     @ManyToOne
     @JoinColumn(name = "fk_user_id", nullable = false)
     private UserDomain user;
-
-    @Column(name = "bool_deleted", nullable = false)
-    private Boolean isDeleted = false;
 }
