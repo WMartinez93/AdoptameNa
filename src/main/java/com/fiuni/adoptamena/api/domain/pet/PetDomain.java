@@ -50,6 +50,9 @@ public class PetDomain implements BaseDomain {
     @Column(name = "bool_deleted")
     private Boolean isDeleted;
 
+    @Column(name = "str_address_coordinates", length = 255)
+    private String addressCoordinates;
+
     @ManyToOne
     @JoinColumn(name = "fk_id_user", referencedColumnName = "id_user", nullable = false)
     private UserDomain user;
