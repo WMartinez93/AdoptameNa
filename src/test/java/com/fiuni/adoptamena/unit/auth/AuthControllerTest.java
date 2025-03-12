@@ -1,10 +1,8 @@
 package com.fiuni.adoptamena.unit.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fiuni.adoptamena.api.domain.user.UserDomain;
 import com.fiuni.adoptamena.auth.LoginRequest;
 import com.fiuni.adoptamena.auth.RegisterRequest;
-import com.fiuni.adoptamena.api.dao.user.IUserDao;
 
 import jakarta.transaction.Transactional;
 
@@ -30,8 +28,8 @@ public class AuthControllerTest {
         @Autowired
         private ObjectMapper objectMapper;
 
-        @Autowired
-        private IUserDao IUserDao;
+        //@Autowired
+        //private IUserDao IUserDao;
         /*
          * @Test
          * void testRegisterAndLoginFlowWithVerifiedAcc() throws Exception {

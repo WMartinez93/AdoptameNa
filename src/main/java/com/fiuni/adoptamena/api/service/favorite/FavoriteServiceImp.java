@@ -15,7 +15,6 @@ import com.fiuni.adoptamena.api.domain.favorite.FavoriteDomain;
 import com.fiuni.adoptamena.api.domain.user.UserDomain;
 import com.fiuni.adoptamena.api.domain.post.PostDomain;
 import com.fiuni.adoptamena.api.dto.favorite.FavoriteDTO;
-import com.fiuni.adoptamena.api.dto.post.PostDTO;
 import com.fiuni.adoptamena.api.dto.post.ResponsePostDTO;
 import com.fiuni.adoptamena.api.service.base.BaseServiceImpl;
 import com.fiuni.adoptamena.auth.CustomUserDetails;
