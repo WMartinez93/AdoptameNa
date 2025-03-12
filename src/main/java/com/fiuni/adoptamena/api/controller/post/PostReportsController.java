@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/postReports")
-@Tag(name = "PostReport")
+@Tag(name = "Post Report")
 public class PostReportsController {
 
     @Autowired

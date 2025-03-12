@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/postTypes")
-@Tag(name = "PostType")
+@Tag(name = "Post Type")
 public class PostTypeController {
 
     @Autowired
