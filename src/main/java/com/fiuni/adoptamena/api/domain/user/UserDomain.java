@@ -1,6 +1,7 @@
 package com.fiuni.adoptamena.api.domain.user;
 
 import com.fiuni.adoptamena.api.domain.base.BaseDomain;
+import com.fiuni.adoptamena.api.domain.favorite.FavoriteDomain;
 import com.fiuni.adoptamena.api.domain.profile.ProfileDomain;
 import jakarta.persistence.*;
 import lombok.*;
@@ -85,6 +86,25 @@ public class UserDomain implements BaseDomain, UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    // Columna para los favoritos
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<FavoriteDomain> favorites;
+
+    @Override
+    public String toString() {
+        return "UserDomain{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", creationDate=" + creationDate +
+                ", role=" + role.getName() +
+                ", profile=" + profile.getId() +
+                ", isVerified=" + isVerified +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 
 }

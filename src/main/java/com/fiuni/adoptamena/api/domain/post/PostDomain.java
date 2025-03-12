@@ -11,7 +11,7 @@ import java.io.Serial;
 import java.util.Date;
 
 @Entity
-@Table(name= "posts")
+@Table(name = "posts")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,14 +23,14 @@ public class PostDomain implements BaseDomain {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_post", nullable = false, unique = true )
+    @Column(name = "id_post", nullable = false, unique = true)
     private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
     private UserDomain user;
 
-    @Column(name = "str_title", nullable = false )
+    @Column(name = "str_title", nullable = false)
     private String title;
 
     @Column(name = "str_content")
