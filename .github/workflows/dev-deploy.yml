@@ -30,5 +30,11 @@ jobs:
         SSH_USER: ${{ secrets.SSH_USER }}
         SSH_PASS: ${{ secrets.SSH_PASS }}
       run: |
-        sshpass -p "$SSH_PASS" scp -o StrictHostKeyChecking=no target/*.jar $SSH_USER@$SSH_HOST:/etc/opt/adoptamena/dev/
-        sshpass -p "$SSH_PASS" ssh $SSH_USER@$SSH_HOST "sudo systemctl restart adoptamena-dev-service.service"
+        # Copy .jar to /tmp/
+        sshpass -p "$SSH_PASS" scp -o StrictHostKeyChecking=no target/*.jar $SSH_USER@$SSH_HOST:/tmp/
+
+        # Luego, en el servidor remoto, mueve el archivo al directorio con sudo
+        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "echo '$SSH_PASS' | sudo -S mv /tmp/*.jar /etc/opt/adoptamena/dev/"
+
+        # Restart Service
+        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "echo '$SSH_PASS' | sudo -S systemctl restart adoptamena-dev-service.service"
