@@ -51,7 +51,7 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
     @Override
     public ResponseMediaDTO getById(Integer id) {
         MediaDomain mediaDomain = mediaDao.findById(id).orElseThrow(
-            () -> new ResourceNotFoundException("Media con id " + id + " no encontrado"));
+                () -> new ResourceNotFoundException("Media con id " + id + " no encontrado"));
         return convertDomainToDto(mediaDomain);
     }
 
@@ -62,71 +62,89 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
 
     @Override
     public void delete(Integer id) {
-        //Verficar si existe el media
-        mediaDao.findById(id).orElseThrow(
-            () -> new ResourceNotFoundException("Media con id " + id + " no encontrado"));
+        // Buscar el media en la base de datos
+        MediaDomain media = mediaDao.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Media con id " + id + " no encontrado"));
+
+        // Obtener la ruta del archivo
+        Path filePath = Paths.get(MEDIA_FOLDER_PATH, media.getUrl().replace("/media/", ""));
+
+        try {
+            // Verificar si el archivo existe y eliminarlo
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+                log.info("Archivo eliminado: " + filePath.toString());
+            } else {
+                log.warn("Archivo no encontrado: " + filePath.toString());
+            }
+        } catch (Exception e) {
+            log.error("Error al eliminar el archivo: " + e.getMessage());
+        }
+
+        // Eliminar el registro en la base de datos
         mediaDao.deleteById(id);
+        log.info("Registro de media eliminado: ID " + id);
     }
 
-@Override
-public ResponseMediaDTO uploadMedia(RequestMediaDTO media) {
-    MultipartFile file = media.getFile();
+    @Override
+    public ResponseMediaDTO uploadMedia(RequestMediaDTO media) {
+        MultipartFile file = media.getFile();
 
-    // Verificar si el archivo es nulo o está vacío
-    if (file == null || file.isEmpty()) {
-        throw new BadRequestException("El archivo está vacío");
-    }
-
-    try {
-        // Crear la carpeta si no existe
-        Path uploadPath = Paths.get(MEDIA_FOLDER_PATH);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
+        // Verificar si el archivo es nulo o está vacío
+        if (file == null || file.isEmpty()) {
+            throw new BadRequestException("El archivo está vacío");
         }
 
-        // Obtener la extensión del archivo
-        String originalFilename = file.getOriginalFilename();
-        String extension = "";
+        try {
+            // Crear la carpeta si no existe
+            Path uploadPath = Paths.get(MEDIA_FOLDER_PATH);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
 
-        if (originalFilename != null && originalFilename.contains(".")) {
-            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            // Obtener la extensión del archivo
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+
+            // Generar un nombre único para el archivo
+            String uniqueFilename = UUID.randomUUID().toString() + extension;
+
+            // Guardar el archivo en la carpeta
+            Path filePath = uploadPath.resolve(uniqueFilename);
+            Files.write(filePath, file.getBytes(), StandardOpenOption.CREATE);
+
+            // Construir la URL del archivo
+            String fileUrl = "/media/" + uniqueFilename;
+
+            // Obtener el tipo MIME del archivo
+            String mimeType = file.getContentType();
+
+            // Crear el objeto MediaDomain para guardar en la base de datos
+            MediaDomain mediaDomain = new MediaDomain();
+            mediaDomain.setMimeType(mimeType != null ? mimeType : "application/octet-stream");
+            mediaDomain.setUrl(fileUrl);
+            mediaDomain.setUploadDate(new Date());
+
+            // Aquí debes obtener el usuario autenticado
+            UserDomain user = getCurrentUser();
+            mediaDomain.setUser(user);
+
+            // Guardar en la base de datos
+            mediaDomain = mediaDao.save(mediaDomain);
+
+            // Retornar el DTO con la información guardada
+            return convertDomainToDto(mediaDomain);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar el archivo: " + e.getMessage());
         }
-
-        // Generar un nombre único para el archivo
-        String uniqueFilename = UUID.randomUUID().toString() + extension;
-
-        // Guardar el archivo en la carpeta
-        Path filePath = uploadPath.resolve(uniqueFilename);
-        Files.write(filePath, file.getBytes(), StandardOpenOption.CREATE);
-
-        // Construir la URL del archivo
-        String fileUrl = "/media/" + uniqueFilename;
-
-        // Obtener el tipo MIME del archivo
-        String mimeType = file.getContentType();
-
-        // Crear el objeto MediaDomain para guardar en la base de datos
-        MediaDomain mediaDomain = new MediaDomain();
-        mediaDomain.setMimeType(mimeType != null ? mimeType : "application/octet-stream");
-        mediaDomain.setUrl(fileUrl);
-        mediaDomain.setUploadDate(new Date());
-        
-        // Aquí debes obtener el usuario autenticado
-        UserDomain user = getCurrentUser();
-        mediaDomain.setUser(user);
-
-        // Guardar en la base de datos
-        mediaDomain = mediaDao.save(mediaDomain);
-
-        // Retornar el DTO con la información guardada
-        return convertDomainToDto(mediaDomain);
-
-    } catch (Exception e) {
-        throw new RuntimeException("Error al guardar el archivo: " + e.getMessage());
     }
-}
 
-        /*
+    /*
      * Obtiene el usuario actualmente logueado, se implementa aqui, ya que en la
      * Interfaz base no se pasa el id del usuario como parametro, entonces no es
      * posible pasarlo por controlador se podria pasar desde el controlador
@@ -143,24 +161,22 @@ public ResponseMediaDTO uploadMedia(RequestMediaDTO media) {
         throw new ForbiddenException("Usuario no autenticado");
     }
 
-
-
-    //Metodo no va ser utilizado (No se crearan medias de esta forma)
+    // Metodo no va ser utilizado (No se crearan medias de esta forma)
     @Override
     public ResponseMediaDTO create(ResponseMediaDTO dto) {
         throw new UnsupportedOperationException("Unimplemented method 'create'");
     }
 
-    //Metodo no va ser utilizado (No se actualizaran los medias)
+    // Metodo no va ser utilizado (No se actualizaran los medias)
     @Override
     public ResponseMediaDTO update(ResponseMediaDTO dto) {
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
-    //Metodo no va ser utilizado (No se recibiran dtos)
+    // Metodo no va ser utilizado (No se recibiran dtos)
     @Override
     protected MediaDomain convertDtoToDomain(ResponseMediaDTO dto) {
         throw new UnsupportedOperationException("Unimplemented method 'convertDtoToDomain'");
     }
-    
+
 }
