@@ -23,7 +23,7 @@ public class PasswordResetService {
     private final EmailService emailService;
     private final AuthService authService;
 
-    private static final String BASE_RESET_PASSWORD_LINK = "https://test--relaxed-bienenstitch-1d8d39.netlify.app/reset-password?token=";
+    private static final String BASE_RESET_PASSWORD_LINK = "https://adoptamena.netlify.app//reset-password?token=";
 
     /**
      * Crea un nuevo token de restablecimiento de contraseña para un usuario y lo
