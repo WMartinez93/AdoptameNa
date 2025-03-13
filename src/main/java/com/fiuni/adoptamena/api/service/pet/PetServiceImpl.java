@@ -46,6 +46,7 @@ public class PetServiceImpl extends BaseServiceImpl<PetDomain, PetDTO> implement
         domain.setGender(dto.getGender());
         domain.setUrlPhoto(dto.getUrlPhoto());
         domain.setIsSterilized(dto.getIsSterilized());
+        domain.setAddressCoordinates(dto.getAddressCoordinates());
         return domain;
     }
 
@@ -60,6 +61,7 @@ public class PetServiceImpl extends BaseServiceImpl<PetDomain, PetDTO> implement
         dto.setGender(domain.getGender());
         dto.setUrlPhoto(domain.getUrlPhoto());
         dto.setIsSterilized(domain.getIsSterilized());
+        dto.setAddressCoordinates(domain.getAddressCoordinates());
 
         dto.setUserId(domain.getUser().getId());
         dto.setAnimalId(domain.getAnimal().getId());
@@ -110,6 +112,7 @@ public class PetServiceImpl extends BaseServiceImpl<PetDomain, PetDTO> implement
         pet.setGender(dto.getGender());
         pet.setUrlPhoto(dto.getUrlPhoto());
         pet.setIsSterilized(dto.getIsSterilized());
+        pet.setAddressCoordinates(dto.getAddressCoordinates());
         pet = petDao.save(pet);
         return convertDomainToDto(pet);
     }

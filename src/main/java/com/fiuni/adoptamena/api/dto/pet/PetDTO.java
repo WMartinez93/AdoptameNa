@@ -41,4 +41,7 @@ public class PetDTO extends BaseDTO {
     private Integer breedId;
 
     private Integer petStatusId;
+
+    @Size(max = 255, message = "Las coordenadas de la dirección deben tener como máximo 255 caracteres")
+    private String addressCoordinates;
 }
