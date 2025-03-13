@@ -1,7 +1,6 @@
 package com.fiuni.adoptamena.api.domain.media;
 
 import com.fiuni.adoptamena.api.domain.base.BaseDomain;
-import com.fiuni.adoptamena.api.domain.post.PostDomain;
 import com.fiuni.adoptamena.api.domain.user.UserDomain;
 
 import lombok.*;
