@@ -2,13 +2,13 @@
 Este proyecto se va a realizar para la materia de Ingenieria del Software 2
 
 # Como herramientas a utilizar son:
-**React** -> para el frontend  
+**Next.TS** -> para el frontend  
 **Springboot** -> para el backend  
 
 ## Ramas definidas:
 **dev** -> Rama p/ crear nuevas funcionalidades o realizar cambios en el codigo existente.<br/>
-**main** -> Rama principal del proyecto, codigo listo p/ produccion.<br/>
-**test** -> Rama p/ probar las nuevas funcionalidades y/o los cambios realizados. 
+**test** -> Rama p/ probar las nuevas funcionalidades y/o los cambios realizados.<br/>
+**main** -> Rama principal del proyecto, codigo listo p/ produccion.
 
 ## Plantillas p/ Pull Request:
 
@@ -29,5 +29,3 @@ Este proyecto se va a realizar para la materia de Ingenieria del Software 2
     * Resultado esperado.<br/>
     * Resultado actual.<br/>
     * Notas adicionales.
-
-README sujeto a cambios...
