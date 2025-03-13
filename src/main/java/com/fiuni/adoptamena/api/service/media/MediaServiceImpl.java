@@ -58,6 +58,12 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
         return convertDomainToDto(mediaDomain);
     }
 
+
+    /**
+     * En principio no se va a utilizar este metodo, ya que no se va a listar todos los medias
+     * Se va a listar los medias de un post o pet en especifico
+     * Se implementa para cumplir con la interfaz base
+     **/
     @Override
     public List<ResponseMediaDTO> getAll(Pageable pageable) {
         return convertDomainListToDtoList(mediaDao.findAll(pageable).getContent());
