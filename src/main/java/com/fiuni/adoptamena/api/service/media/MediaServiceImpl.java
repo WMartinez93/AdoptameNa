@@ -11,6 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fiuni.adoptamena.exception_handler.exceptions.*;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,32 +64,45 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
     }
 
     @Override
+    @Transactional
     public void delete(Integer id) {
         // Buscar el media en la base de datos
         MediaDomain media = mediaDao.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Media con id " + id + " no encontrado"));
-
+            () -> new ResourceNotFoundException("Media con id " + id + " no encontrado"));
+    
         // Obtener la ruta del archivo
         Path filePath = Paths.get(MEDIA_FOLDER_PATH, media.getUrl().replace("/media/", ""));
-
+    
         try {
-            // Verificar si el archivo existe y eliminarlo
+            // Verificar si el archivo existe antes de intentar eliminarlo
             if (Files.exists(filePath)) {
-                Files.delete(filePath);
-                log.info("Archivo eliminado: " + filePath.toString());
+                // Intentar eliminar el archivo
+                boolean deleted = Files.deleteIfExists(filePath);
+                if (deleted) {
+                    log.info("Archivo eliminado correctamente: " + filePath.toString());
+                } else {
+                    log.warn("No se pudo eliminar el archivo: " + filePath.toString());
+                }
             } else {
                 log.warn("Archivo no encontrado: " + filePath.toString());
             }
         } catch (Exception e) {
-            log.error("Error al eliminar el archivo: " + e.getMessage());
+            log.error("Error al intentar eliminar el archivo: " + e.getMessage());
+            throw new RuntimeException("No se pudo eliminar el archivo: " + e.getMessage());
         }
-
-        // Eliminar el registro en la base de datos
-        mediaDao.deleteById(id);
-        log.info("Registro de media eliminado: ID " + id);
+    
+        try {
+            // Eliminar el registro en la base de datos
+            mediaDao.deleteById(id);
+            log.info("Registro de media eliminado correctamente: ID " + id);
+        } catch (Exception e) {
+            log.error("Error al eliminar el registro en la base de datos: " + e.getMessage());
+            throw new RuntimeException("Error al eliminar el registro en la base de datos: " + e.getMessage());
+        }
     }
 
     @Override
+    @Transactional
     public ResponseMediaDTO uploadMedia(RequestMediaDTO media) {
         MultipartFile file = media.getFile();
 
