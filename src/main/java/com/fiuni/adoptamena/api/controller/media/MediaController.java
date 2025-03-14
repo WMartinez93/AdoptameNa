@@ -1,6 +1,5 @@
 package com.fiuni.adoptamena.api.controller.media;
 
-import com.fiuni.adoptamena.api.dto.media.RequestMediaDTO;
 import com.fiuni.adoptamena.api.dto.media.ResponseMediaDTO;
 import com.fiuni.adoptamena.api.service.media.IMediaService;
 
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -38,8 +38,8 @@ public class MediaController {
 
     // Subir un nuevo archivo media
     @PostMapping("/upload")
-    public ResponseEntity<ResponseMediaDTO> uploadMedia(@RequestBody RequestMediaDTO mediaDto) {
-        ResponseMediaDTO media = mediaService.uploadMedia(mediaDto);
+    public ResponseEntity<ResponseMediaDTO> uploadMedia(@RequestParam("file") MultipartFile file) {
+        ResponseMediaDTO media = mediaService.uploadMedia(file);
         return ResponseEntity.ok(media);
     }
 

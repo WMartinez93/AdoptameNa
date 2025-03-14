@@ -21,7 +21,6 @@ import com.fiuni.adoptamena.api.dao.media.IMediaDao;
 import com.fiuni.adoptamena.api.dao.user.IUserDao;
 import com.fiuni.adoptamena.api.domain.media.MediaDomain;
 import com.fiuni.adoptamena.api.domain.user.UserDomain;
-import com.fiuni.adoptamena.api.dto.media.RequestMediaDTO;
 import com.fiuni.adoptamena.api.dto.media.ResponseMediaDTO;
 import com.fiuni.adoptamena.api.service.base.BaseServiceImpl;
 import com.fiuni.adoptamena.auth.CustomUserDetails;
@@ -109,8 +108,7 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
 
     @Override
     @Transactional
-    public ResponseMediaDTO uploadMedia(RequestMediaDTO media) {
-        MultipartFile file = media.getFile();
+    public ResponseMediaDTO uploadMedia(MultipartFile file) {
 
         // Verificar si el archivo es nulo o está vacío
         if (file == null || file.isEmpty()) {
