@@ -3,8 +3,12 @@ package com.fiuni.adoptamena.api.controller.media;
 import com.fiuni.adoptamena.api.dto.media.RequestMediaDTO;
 import com.fiuni.adoptamena.api.dto.media.ResponseMediaDTO;
 import com.fiuni.adoptamena.api.service.media.IMediaService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/media")
+@Tag(name = "Media")
 public class MediaController {
 
     @Autowired
@@ -27,10 +32,8 @@ public class MediaController {
     // Obtener todos los archivos media con paginación
     // No se utiliza en el front-end (Permanece para propósitos de debugging)
     @GetMapping("/")
-    public ResponseEntity<List<ResponseMediaDTO>> getAll(
-            @RequestParam(defaultValue = "0") int page, 
-            @RequestParam(defaultValue = "10") int size) {
-        List<ResponseMediaDTO> mediaList = mediaService.getAll(PageRequest.of(page, size));
+    public ResponseEntity<List<ResponseMediaDTO>> getAll(Pageable pageable) {
+        List<ResponseMediaDTO> mediaList = mediaService.getAll(pageable);
         return ResponseEntity.ok(mediaList);
     }
 
