@@ -3,6 +3,10 @@ package com.fiuni.adoptamena.api.controller.media;
 import com.fiuni.adoptamena.api.dto.media.ResponseMediaDTO;
 import com.fiuni.adoptamena.api.service.media.IMediaService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +40,11 @@ public class MediaController {
         return ResponseEntity.ok(mediaList);
     }
 
-    // Subir un nuevo archivo media
     @PostMapping("/upload")
-    public ResponseEntity<ResponseMediaDTO> uploadMedia(@RequestParam("file") MultipartFile file) {
+    @Operation(summary = "Subir un archivo multimedia", description = "Este endpoint permite subir archivos multimedia, principalmente utilizado para cargar y usar fotos. Se recomienda no cargar archivos de gran tamaño, como fotos de alta resolución o videos. Aunque el endpoint aún está en desarrollo, se ha habilitado para permitir que el front-end comience a subir archivos multimedia al sistema.")
+    public ResponseEntity<ResponseMediaDTO> uploadMedia(
+            @RequestBody(content = @Content(mediaType = "multipart/form-data", schema = @Schema(type = "string", format = "binary"))) @RequestParam("file") MultipartFile file) {
+
         ResponseMediaDTO media = mediaService.uploadMedia(file);
         return ResponseEntity.ok(media);
     }
