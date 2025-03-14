@@ -26,7 +26,7 @@ public class OpenApiConfig {
                                                                                 .scheme("bearer")
                                                                                 .bearerFormat("JWT")))
                                 .servers(List.of(
-                                                new Server().url("https://adoptamena-api.rodrigomaidana.com")
+                                                new Server().url("https://adoptamena-api.rodrigomaidana.com/api")
                                                                 .description("Producción")));
         }
 }
