@@ -38,6 +38,7 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
     private IUserDao userDao;
 
     private final String MEDIA_FOLDER_PATH = "/etc/opt/adoptamena/media";
+    private final String MEDIA_PATH = "https://adoptamena-api.rodrigomaidana.com/media/";
 
     @Override
     protected ResponseMediaDTO convertDomainToDto(MediaDomain domain) {
@@ -57,9 +58,9 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
         return convertDomainToDto(mediaDomain);
     }
 
-
     /**
-     * En principio no se va a utilizar este metodo, ya que no se va a listar todos los medias
+     * En principio no se va a utilizar este metodo, ya que no se va a listar todos
+     * los medias
      * Se va a listar los medias de un post o pet en especifico
      * Se implementa para cumplir con la interfaz base
      **/
@@ -73,11 +74,11 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
     public void delete(Integer id) {
         // Buscar el media en la base de datos
         MediaDomain media = mediaDao.findById(id).orElseThrow(
-            () -> new ResourceNotFoundException("Media con id " + id + " no encontrado"));
-    
+                () -> new ResourceNotFoundException("Media con id " + id + " no encontrado"));
+
         // Obtener la ruta del archivo
         Path filePath = Paths.get(MEDIA_FOLDER_PATH, media.getUrl().replace("/media/", ""));
-    
+
         try {
             // Verificar si el archivo existe antes de intentar eliminarlo
             if (Files.exists(filePath)) {
@@ -95,7 +96,7 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
             log.error("Error al intentar eliminar el archivo: " + e.getMessage());
             throw new RuntimeException("No se pudo eliminar el archivo: " + e.getMessage());
         }
-    
+
         try {
             // Eliminar el registro en la base de datos
             mediaDao.deleteById(id);
@@ -138,7 +139,7 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
             Files.write(filePath, file.getBytes(), StandardOpenOption.CREATE);
 
             // Construir la URL del archivo
-            String fileUrl = "/media/" + uniqueFilename;
+            String fileUrl = MEDIA_PATH + uniqueFilename;
 
             // Obtener el tipo MIME del archivo
             String mimeType = file.getContentType();
