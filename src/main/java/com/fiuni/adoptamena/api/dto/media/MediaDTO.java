@@ -13,7 +13,7 @@ import com.fiuni.adoptamena.api.dto.base.BaseDTO;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseMediaDTO extends BaseDTO {
+public class MediaDTO extends BaseDTO {
 
     private String mimeType; // Tipo MIME (ej. "image/png", "video/mp4")
 

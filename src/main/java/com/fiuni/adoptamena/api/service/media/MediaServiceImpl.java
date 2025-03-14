@@ -21,7 +21,7 @@ import com.fiuni.adoptamena.api.dao.media.IMediaDao;
 import com.fiuni.adoptamena.api.dao.user.IUserDao;
 import com.fiuni.adoptamena.api.domain.media.MediaDomain;
 import com.fiuni.adoptamena.api.domain.user.UserDomain;
-import com.fiuni.adoptamena.api.dto.media.ResponseMediaDTO;
+import com.fiuni.adoptamena.api.dto.media.MediaDTO;
 import com.fiuni.adoptamena.api.service.base.BaseServiceImpl;
 import com.fiuni.adoptamena.auth.CustomUserDetails;
 
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMediaDTO> implements IMediaService {
+public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, MediaDTO> implements IMediaService {
 
     @Autowired
     private IMediaDao mediaDao;
@@ -41,8 +41,8 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
     private final String MEDIA_PATH = "https://adoptamena-api.rodrigomaidana.com/media/";
 
     @Override
-    protected ResponseMediaDTO convertDomainToDto(MediaDomain domain) {
-        ResponseMediaDTO mediaDto = new ResponseMediaDTO();
+    protected MediaDTO convertDomainToDto(MediaDomain domain) {
+        MediaDTO mediaDto = new MediaDTO();
         mediaDto.setId(domain.getId());
         mediaDto.setUrl(domain.getUrl());
         mediaDto.setMimeType(domain.getMimeType());
@@ -52,7 +52,7 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
     }
 
     @Override
-    public ResponseMediaDTO getById(Integer id) {
+    public MediaDTO getById(Integer id) {
         MediaDomain mediaDomain = mediaDao.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Media con id " + id + " no encontrado"));
         return convertDomainToDto(mediaDomain);
@@ -65,7 +65,7 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
      * Se implementa para cumplir con la interfaz base
      **/
     @Override
-    public List<ResponseMediaDTO> getAll(Pageable pageable) {
+    public List<MediaDTO> getAll(Pageable pageable) {
         return convertDomainListToDtoList(mediaDao.findAll(pageable).getContent());
     }
 
@@ -109,7 +109,7 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
 
     @Override
     @Transactional
-    public ResponseMediaDTO uploadMedia(MultipartFile file) {
+    public MediaDTO uploadMedia(MultipartFile file) {
 
         // Verificar si el archivo es nulo o está vacío
         if (file == null || file.isEmpty()) {
@@ -184,19 +184,19 @@ public class MediaServiceImpl extends BaseServiceImpl<MediaDomain, ResponseMedia
 
     // Metodo no va ser utilizado (No se crearan medias de esta forma)
     @Override
-    public ResponseMediaDTO create(ResponseMediaDTO dto) {
+    public MediaDTO create(MediaDTO dto) {
         throw new UnsupportedOperationException("Unimplemented method 'create'");
     }
 
     // Metodo no va ser utilizado (No se actualizaran los medias)
     @Override
-    public ResponseMediaDTO update(ResponseMediaDTO dto) {
+    public MediaDTO update(MediaDTO dto) {
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     // Metodo no va ser utilizado (No se recibiran dtos)
     @Override
-    protected MediaDomain convertDtoToDomain(ResponseMediaDTO dto) {
+    protected MediaDomain convertDtoToDomain(MediaDTO dto) {
         throw new UnsupportedOperationException("Unimplemented method 'convertDtoToDomain'");
     }
 
